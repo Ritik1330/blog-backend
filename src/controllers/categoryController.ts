@@ -4,6 +4,7 @@ import ErrorHandler from "../utils/utility-class";
 import { TryCatch } from "../middlewares/error";
 import { CategoryType } from "../types/types";
 import { User } from "../models/User";
+
 export const newCategory = TryCatch(
   async (
     req: Request<any, {}, CategoryType>,
@@ -13,35 +14,40 @@ export const newCategory = TryCatch(
     const {
       name,
       slug,
-      visibility,
-      showInHierarchy,
       description,
-      sectionType,
-      tags,
-      createdBy,
+      categoryType,
+      keywords,
+      // visibility,
+      // createdBy,
     } = req.body;
+    console.log(req.body);
 
-    let category = await Category.findById({ _id: slug });
+    let category = await Category.findOne({ slug: slug });
     if (category) {
       res.status(403).json({
         success: false,
-        message: `Category ${category.name} already exists in system. please change slug or Name and try.`,
+        message: `Category ${category.name}'s slug already exists in system. please change slug or Name and try.`,
         status: 403,
       });
     }
     if (!name || !slug) {
       next(new ErrorHandler("Please add Required fileds", 400));
     }
+
+    const categoryCount = await Category.countDocuments();
+
+    console.log(categoryCount);
     category = await Category.create({
-      _id: slug,
+      _id: categoryCount,
+      menuHierarchy: categoryCount,
+      homeHierarchy: categoryCount,
       name,
       slug,
-      visibility,
-      showInHierarchy,
+      // visibility,
       description,
-      sectionType,
-      tags,
-      createdBy,
+      categoryType,
+      keywords,
+      createdBy: "ritik",
     });
 
     return res.status(201).json({
@@ -52,18 +58,20 @@ export const newCategory = TryCatch(
 );
 
 export const getAllCategory = TryCatch(async (req, res, next) => {
-  const categorys = await Category.find({});
-
+  const categories = await Category.find({});
   return res.status(200).json({
     success: true,
-    categorys,
+    categories,
   });
 });
 
 export const getCategoryDetails = TryCatch(async (req, res, next) => {
   const id: string = req.params.id;
 
-  const category = await Category.findById(id).populate("createdBy", "name email");
+  const category = await Category.findById(id).populate(
+    "createdBy",
+    "name email"
+  );
 
   if (!category) return next(new ErrorHandler("Invalid Category id", 400));
 

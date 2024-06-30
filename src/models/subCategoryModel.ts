@@ -1,19 +1,22 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 interface SubCategoryType extends Document {
   _id: string;
   name: string;
   slug: string;
-  visibility?: String;
-  displayID?: number;
   description?: string;
-  sectionType: "subsection";
-  tags?: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  category: string;
+  visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
+  menuHierarchy?: number;
+  homeHierarchy?: number;
+  categoryType: "subSection";
+  keywords?: string[];
+  createdBy: string;
+  updatedBy?: string[];
+  status: "active" | "inactive";
 }
 
-const subCategorySchema = new mongoose.Schema(
+const SubCategorySchema = new Schema<SubCategoryType>(
   {
     _id: {
       type: String,
@@ -22,43 +25,61 @@ const subCategorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "Please enter Name"],
+      unique: true,
     },
     slug: {
       type: String,
       required: [true, "Please enter Slug"],
       unique: true,
     },
-    displayID: {
-      type: Number,
-      default: 0,
-    },
-    visibility: {
-      type: String,
-      enum: ["hamburger_menu", "main_menu", "both", "null"],
-      default: "both",
-    },
     description: {
       type: String,
     },
-    sectionType: {
-      type: String,
-      default: "subsection",
+    keywords: {
+      type: [String],
     },
     category: {
       type: String,
       ref: "Category",
       required: [true, "Please enter Category"],
     },
-    tags: {
+    menuHierarchy: {
+      type: Number,
+      unique: true,
+      required: [
+        true,
+        "Please enter the Menu Bar Hierarchy or connect with the system administrator.",
+      ],
+    },
+    homeHierarchy: {
+      type: Number,
+      unique: true,
+      required: [true, "Please enter Home Hierarchy"],
+    },
+    visibility: {
+      type: String,
+      enum: ["hamburgerMenu", "mainMenu", "both", null],
+      default: "both",
+    },
+
+    categoryType: {
+      type: String,
+      default: "subSection",
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+    createdBy: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
+    updatedBy: {
       type: [String],
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
+      ref: "User",
     },
   },
   {
@@ -68,5 +89,5 @@ const subCategorySchema = new mongoose.Schema(
 
 export const SubCategory = mongoose.model<SubCategoryType>(
   "SubCategory",
-  subCategorySchema
+  SubCategorySchema
 );

@@ -4,12 +4,12 @@ interface CategoryType extends Document {
   _id: string;
   name: string;
   slug: string;
-  visibility?: "hamburger_menu" | "main_menu" | "both";
+  visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
   menuHierarchy?: number;
   homeHierarchy?: number;
   description?: string;
   categoryType: "section";
-  tags?: string[];
+  keywords?: string[];
   createdBy: string;
   updatedBy?: string[];
   status: "active" | "inactive";
@@ -34,6 +34,9 @@ const categorySchema = new Schema<CategoryType>(
     description: {
       type: String,
     },
+    keywords: {
+      type: [String],
+    },
     menuHierarchy: {
       type: Number,
       unique: true,
@@ -49,16 +52,12 @@ const categorySchema = new Schema<CategoryType>(
     },
     visibility: {
       type: String,
-      enum: ["hamburger_menu", "main_menu", "both", null],
+      enum: ["hamburgerMenu", "mainMenu", "both", null],
       default: "both",
     },
-
     categoryType: {
       type: String,
       default: "section",
-    },
-    tags: {
-      type: [String],
     },
     status: {
       type: String,

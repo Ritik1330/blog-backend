@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 export interface newUserRequstBody {
   _id: string;
   name: string;
-  email: string; 
+  email: string;
   photo: string;
   role: string;
   gender: string;
@@ -46,26 +46,38 @@ export type PostType = {
 export type CategoryType = {
   name: string;
   slug: string;
-  visibility?: string;
-  showInHierarchy?: number;
+  visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
+  menuHierarchy?: number;
+  homeHierarchy?: number;
   description?: string;
-  sectionType?: "section";
-  tags?: string[];
-  createdBy:string;
+  categoryType: "section";
+  keywords?: string[];
+  createdBy: string;
+  updatedBy?: string[];
+  status?: "active" | "inactive";
 };
 
-type SubCategoryTypeAdditional = {
+export type SubCategoryType = {
+  name: string;
+  slug: string;
+  visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
+  menuHierarchy?: number;
+  homeHierarchy?: number;
+  description?: string;
+  categoryType: "subSection";
+  keywords?: string[];
+  createdBy: string;
+  updatedBy?: string[];
+  status?: "active" | "inactive";
   category: String;
-  categoryType?: "subsection";
 };
 
 export interface newUniqueIdRequestBody {
   _id?: string;
   idFor: string;
   count?: string;
-  
 }
-export interface ImageType  {
+export interface ImageType {
   // _id: string;
   title: string;
   credits?: string;
@@ -73,4 +85,4 @@ export interface ImageType  {
   updatedby?: string;
 }
 
-export type SubCategoryType = CategoryType & SubCategoryTypeAdditional;
+// export type SubCategoryType = CategoryType & SubCategoryTypeAdditional;

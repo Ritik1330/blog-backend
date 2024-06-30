@@ -3,7 +3,7 @@ import { SubCategory } from "../models/subCategoryModel";
 import { Category } from "../models/categoryModel";
 import ErrorHandler from "../utils/utility-class";
 import { TryCatch } from "../middlewares/error";
-import { SubCategoryType } from "../types/types";
+import { SubCategoryType, CategoryType } from "../types/types";
 
 export const newSubCategory = TryCatch(
   async (
@@ -11,16 +11,7 @@ export const newSubCategory = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const {
-      name,
-      slug,
-      category,
-      visibility,
-      displayID,
-      description,
-      sectionType,
-      tags,
-    } = req.body;
+    const { name, slug, description, categoryType, keywords,category } = req.body;
 
     let categorycheck = await Category.findById({ _id: category });
     if (!categorycheck) {
@@ -30,27 +21,35 @@ export const newSubCategory = TryCatch(
         status: 404,
       });
     }
-    let subCategory = await SubCategory.findById({ _id: slug });
+    let subCategory = await SubCategory.findOne({ slug: slug });
+
     if (subCategory) {
       res.status(403).json({
         success: false,
-        message: `SubCategory ${subCategory.name} already exists in system. please change slug & try`,
+        message: `SubCategory ${subCategory.name}'s slug already exists in system. please change slug or Name and try.`,
         status: 403,
       });
     }
     if (!name || !slug) {
       next(new ErrorHandler("Please add Required fileds", 400));
     }
+
+    const subCategoryCount = await SubCategory.countDocuments();
+    let subCategoryIndex = (await SubCategory.find({ category: category })).length;
+    console.log(`subCategoryIndex  ${subCategoryIndex}`)
+
     subCategory = await SubCategory.create({
-      _id: slug,
+      _id: subCategoryCount,
+      menuHierarchy: subCategoryIndex,
+      homeHierarchy: subCategoryCount,
       name,
       slug,
-      category,
-      visibility,
-      displayID,
+      // visibility,
       description,
-      sectionType,
-      tags,
+      categoryType,
+      keywords,
+      createdBy: "ritik",
+      category
     });
 
     return res.status(201).json({
