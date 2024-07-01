@@ -45,7 +45,6 @@ const SubCategorySchema = new Schema<SubCategoryType>(
     },
     menuHierarchy: {
       type: Number,
-      unique: true,
       required: [
         true,
         "Please enter the Menu Bar Hierarchy or connect with the system administrator.",

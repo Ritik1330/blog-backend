@@ -24,7 +24,7 @@ export const newCategory = TryCatch(
 
     let category = await Category.findOne({ slug: slug });
     if (category) {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: `Category ${category.name}'s slug already exists in system. please change slug or Name and try.`,
         status: 403,

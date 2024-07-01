@@ -11,11 +11,13 @@ export const newSubCategory = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const { name, slug, description, categoryType, keywords,category } = req.body;
+    const { name, slug, description, categoryType, keywords, category } =
+      req.body;
 
-    let categorycheck = await Category.findById({ _id: category });
+    let categorycheck = await Category.findOne({ name: category });
+
     if (!categorycheck) {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: `provided category(${category}) not exist in system`,
         status: 404,
@@ -24,7 +26,7 @@ export const newSubCategory = TryCatch(
     let subCategory = await SubCategory.findOne({ slug: slug });
 
     if (subCategory) {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: `SubCategory ${subCategory.name}'s slug already exists in system. please change slug or Name and try.`,
         status: 403,
@@ -35,8 +37,8 @@ export const newSubCategory = TryCatch(
     }
 
     const subCategoryCount = await SubCategory.countDocuments();
-    let subCategoryIndex = (await SubCategory.find({ category: category })).length;
-    console.log(`subCategoryIndex  ${subCategoryIndex}`)
+    let subCategoryIndex = (await SubCategory.find({ category: category }))
+      .length;
 
     subCategory = await SubCategory.create({
       _id: subCategoryCount,
@@ -49,7 +51,7 @@ export const newSubCategory = TryCatch(
       categoryType,
       keywords,
       createdBy: "ritik",
-      category
+      category,
     });
 
     return res.status(201).json({
