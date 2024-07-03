@@ -20,7 +20,7 @@ export const newCategory = TryCatch(
       // visibility,
       // createdBy,
     } = req.body;
-    console.log(req.body);
+   
 
     let category = await Category.findOne({ slug: slug });
     if (category) {
@@ -36,7 +36,7 @@ export const newCategory = TryCatch(
 
     const categoryCount = await Category.countDocuments();
 
-    console.log(categoryCount);
+  
     category = await Category.create({
       _id: categoryCount,
       menuHierarchy: categoryCount,

@@ -85,4 +85,9 @@ export interface ImageType {
   updatedby?: string;
 }
 
+export type TagType = {
+  _id?: string;
+  name: string;
+};
+
 // export type SubCategoryType = CategoryType & SubCategoryTypeAdditional;
