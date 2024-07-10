@@ -33,10 +33,10 @@ export const newTag = TryCatch(
 );
 
 export const getAllTags = TryCatch(async (req, res, next) => {
-  const categories = await Tag.find({}).sort("-_id");
+  const tags = await Tag.find({}).sort("-_id");
   return res.status(200).json({
     success: true,
-    categories,
+    tags,
   });
 });
 

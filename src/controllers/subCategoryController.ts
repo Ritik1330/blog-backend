@@ -14,7 +14,7 @@ export const newSubCategory = TryCatch(
     const { name, slug, description, categoryType, keywords, category } =
       req.body;
 
-    let categorycheck = await Category.findOne({ name: category });
+    let categorycheck = await Category.findById(category);
 
     if (!categorycheck) {
       return res.status(403).json({

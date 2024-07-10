@@ -20,7 +20,7 @@ export const translater = TryCatch(
       return res.status(200).json({
         success: true,
         // translated: result?.text,
-        translated: result?.translation,
+        translation: result?.translation,
       });
     } catch (error) {
       console.error(error); // Log the error for debugging

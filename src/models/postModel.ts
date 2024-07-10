@@ -19,32 +19,35 @@ interface socialData {
   hashtags?: string[];
 }
 interface schemaData {
-  type?: string;
-  key?: string;
-  data?: Record<string, any>[];
+  articleTypeSchema: "None" | "Article" | "NewsArticle" | "BlogPosting";
+  otherSchema: {
+    name: "None" | "FAQPage" | "JobPosting ";
+    schemaData: any;
+  };
 }
 
 interface ContentModel extends Document {
   title: string;
   summary?: string;
   description?: string;
-  image: string;
+  image: string | schemaData;
   blocks: Block[];
-  type: "article" | "slide" | "webstory" | "ePaper";
+  type: "Article" | "Slide" | "Webstory" | "EPaper";
+  primaryCategory: string;
   categories: string[];
   subcategories: string[];
   slug: string;
   tags: string[];
-  author?: string[];
-  status: "draft" | "published" | "archived";
+  authors?: string[];
+  status: "Draft" | "Published" | "Archived";
   createdBy: string;
   updatedBy?: string[];
   publicAt?: Date;
   metadata?: metaData;
   socialData?: socialData;
-  schemaData?: schemaData[];
-  views: string;
-  version: string;
+  schemaData?: schemaData;
+  views: number;
+  version: number;
 }
 
 const schema: Schema = new Schema<ContentModel>(
@@ -77,17 +80,20 @@ const schema: Schema = new Schema<ContentModel>(
     ],
     type: {
       type: String,
-      enum: ["article", "slide", "webstory", "ePaper"],
+      enum: ["Article", "Slide", "Webstory", "EPaper"],
       required: true,
     },
-
+    primaryCategory:{
+      type: String,
+      required: [true, "Please enter Main Category"],
+    },
     categories: {
       type: [String],
       required: [true, "Please enter Category"],
     },
     subcategories: {
       type: [String],
-      required: [true, "Please enter Category"],
+      required: [true, "Please enter SubCategory"],
     },
     slug: {
       type: String,
@@ -98,12 +104,12 @@ const schema: Schema = new Schema<ContentModel>(
       required: [true, "Please enter tags"],
     },
 
-    author: [String],
+    authors: [String],
 
     status: {
       type: String,
-      enum: ["draft", "published", "archived"],
-      default: "draft",
+      enum: ["Draft", "Published", "Archived"],
+      default: "Draft",
     },
 
     createdBy: {
@@ -125,8 +131,6 @@ const schema: Schema = new Schema<ContentModel>(
       keywords: [String],
       canonicalUrl: {
         type: String,
-        unique: [true, "thumbImage Url already Exist"],
-        required: [true, "Please enter Name"],
         validate: validator.default.isURL,
       },
       index: {
@@ -139,17 +143,23 @@ const schema: Schema = new Schema<ContentModel>(
       ogImage: String,
       hashtags: [String],
     },
-    schemaData: [
-      {
+    schemaData: {
+      articleTypeSchema: {
         type: String,
-        key: String,
-        data: [Schema.Types.Mixed],
+        enum: ["None", "Article", "NewsArticle", "BlogPosting"],
+        default: "None",
       },
-    ],
-    views: String,
+      otherSchema: {
+        type: String,
+        enum: ["None", "FAQPage", "JobPosting"],
+        schemaData: Schema.Types.Mixed,
+        default: "None",
+      },
+    },
+    views: Number,
     version: {
-      type: String,
-      default: "1",
+      type: Number,
+      default: 1,
     },
   },
   {

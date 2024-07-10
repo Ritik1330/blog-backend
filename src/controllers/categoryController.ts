@@ -20,7 +20,10 @@ export const newCategory = TryCatch(
       // visibility,
       // createdBy,
     } = req.body;
-   
+
+    if (!name || !slug) {
+      next(new ErrorHandler("Please add Required fileds", 400));
+    }
 
     let category = await Category.findOne({ slug: slug });
     if (category) {
@@ -30,13 +33,9 @@ export const newCategory = TryCatch(
         status: 403,
       });
     }
-    if (!name || !slug) {
-      next(new ErrorHandler("Please add Required fileds", 400));
-    }
 
     const categoryCount = await Category.countDocuments();
 
-  
     category = await Category.create({
       _id: categoryCount,
       menuHierarchy: categoryCount,
