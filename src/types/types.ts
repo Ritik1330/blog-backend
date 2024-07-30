@@ -20,10 +20,6 @@ export type ControllerType = (
   next: NextFunction
 ) => Promise<void | Response<any, Record<string, any>>>;
 
-type Block = {
-  type: string;
-  data: Record<string, any>;
-};
 type ThumbImage = {
   title: string;
   credits: string;
@@ -31,18 +27,56 @@ type ThumbImage = {
   // Other fields...
 };
 
-export type PostType = {
-  title: string;
-  summary?: string;
-  thumbImage: ThumbImage;
+interface Block {
+  id: string;
+  type: string;
+  data: any;
+}
+
+interface Content {
+  time: string;
   blocks: Block[];
   version: string;
-  category: string[];
+}
+interface metaData {
+  metatitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  canonicalUrl?: string;
+  index: boolean;
+}
+interface socialData {
+  ogtitle?: string;
+  ogImage?: string;
+  hashtags?: string[];
+}
+interface schemaData {
+  articleTypeSchema: "None" | "Article" | "NewsArticle" | "BlogPosting";
+  otherSchema?: {
+    name: "None" | "FAQPage" | "JobPosting ";
+    schemaData: any;
+  };
+}
+export interface PostType {
+  title: string;
+  summary?: string | undefined;
+  description?: string;
+  image: string | undefined;
+  content: any;
+  postType: "Article" | "Slide" | "Webstory" | "EPaper";
+  primaryCategory: string;
+  categories: string[];
+  // subcategories: string[];
+  slug: string;
   tags: string[];
-  author: string;
-  // author: mongoose.Types.ObjectId;
-  postType: string;
-};
+  authors?: string[];
+  status: "Draft" | "Published" | "Archived";
+  publicAt?: Date;
+  metaData?: metaData;
+  socialData?: socialData;
+  schemaData?: schemaData;
+  version?: number;
+}
 export type CategoryType = {
   name: string;
   slug: string;
@@ -91,3 +125,31 @@ export type TagType = {
 };
 
 // export type SubCategoryType = CategoryType & SubCategoryTypeAdditional;
+
+interface Block {
+  id: string;
+  type: string;
+  data: any;
+}
+
+interface Content {
+  time: string;
+  blocks: Block[];
+  version: string;
+}
+
+interface metaData {
+  metatitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  canonicalUrl?: string;
+  index: boolean;
+}
+
+export interface StaticPageType {
+  title: string;
+  content: Content;
+  slug: string;
+  status: "Public" | "Private";
+  metaData?: metaData;
+}

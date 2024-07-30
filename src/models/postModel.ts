@@ -2,8 +2,15 @@ import mongoose, { Schema, Document } from "mongoose";
 import validator from "validator";
 
 interface Block {
+  id: string;
   type: string;
-  data: Record<string, any>;
+  data: any;
+}
+
+interface Content {
+  time: string;
+  blocks: Block[];
+  version: string;
 }
 
 interface metaData {
@@ -31,8 +38,8 @@ interface ContentModel extends Document {
   summary?: string;
   description?: string;
   image: string | schemaData;
-  blocks: Block[];
-  type: "Article" | "Slide" | "Webstory" | "EPaper";
+  content: Content;
+  postType: "Article" | "Slide" | "Webstory" | "EPaper";
   primaryCategory: string;
   categories: string[];
   subcategories: string[];
@@ -43,7 +50,7 @@ interface ContentModel extends Document {
   createdBy: string;
   updatedBy?: string[];
   publicAt?: Date;
-  metadata?: metaData;
+  metaData?: metaData;
   socialData?: socialData;
   schemaData?: schemaData;
   views: number;
@@ -66,24 +73,23 @@ const schema: Schema = new Schema<ContentModel>(
       type: String,
       ref: "Image",
     },
-    blocks: [
-      {
-        type: {
-          type: String,
-          required: [true, "Please enter blocks type"],
+    content: {
+      time: { type: String, required: true },
+      blocks: [
+        {
+          id: { type: String, required: true },
+          type: { type: String, required: true },
+          data: { type: Schema.Types.Mixed, required: true },
         },
-        data: {
-          type: Schema.Types.Mixed,
-          required: [true, "Please enter blocks data"],
-        },
-      },
-    ],
-    type: {
+      ],
+      version: { type: String, required: true },
+    },
+    postType: {
       type: String,
       enum: ["Article", "Slide", "Webstory", "EPaper"],
       required: true,
     },
-    primaryCategory:{
+    primaryCategory: {
       type: String,
       required: [true, "Please enter Main Category"],
     },
@@ -102,10 +108,9 @@ const schema: Schema = new Schema<ContentModel>(
     tags: {
       type: [String],
       required: [true, "Please enter tags"],
+      ref: "Tag",
     },
-
     authors: [String],
-
     status: {
       type: String,
       enum: ["Draft", "Published", "Archived"],
@@ -125,13 +130,12 @@ const schema: Schema = new Schema<ContentModel>(
       type: Date,
       default: Date.now,
     },
-    metadata: {
+    metaData: {
       metatitle: String,
       metaDescription: String,
       keywords: [String],
       canonicalUrl: {
         type: String,
-        validate: validator.default.isURL,
       },
       index: {
         type: Boolean,

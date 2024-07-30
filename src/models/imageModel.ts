@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface Image extends Document {
   _id: string;
+  storage: string;
   title: string;
   credits?: string;
   url: string;
@@ -14,9 +15,13 @@ const ImageSchema: Schema<Image> = new Schema(
       type: String,
       required: [true, "A unique image ID is required"],
     },
+    storage: {
+      type: String,
+      required: [true, "Please enter the storage origin."],
+    },
     title: {
       type: String,
-      required: [true, "Please enter a title"],
+      required: [true, "Please enter image title"],
     },
     url: {
       type: String,
@@ -36,7 +41,7 @@ const ImageSchema: Schema<Image> = new Schema(
     },
     updatedby: {
       type: String,
-      required: [true, "Please enter tags"],
+      required: [true, "Please enter updatedby"],
     },
   },
   {
@@ -44,5 +49,10 @@ const ImageSchema: Schema<Image> = new Schema(
   }
 );
 
-const ImageModel = mongoose.model<Image>("Image", ImageSchema);
-export  default ImageModel
+
+
+export const Image = mongoose.model<Image>(
+  "Image",
+  ImageSchema
+);
+

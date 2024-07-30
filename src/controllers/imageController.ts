@@ -3,7 +3,9 @@ import { UniqueId } from "../models/uniqueIdModel";
 import { ImageType } from "../types/types";
 import ErrorHandler from "../utils/utility-class";
 import { TryCatch } from "../middlewares/error";
-import Image from "../models/imageModele";
+import {Image} from "../models/imageModel";
+import { uploadsOnCloudinary } from "../utils/cloudinary";
+import { config } from "dotenv";
 
 export const imageUpload = TryCatch(
   async (
@@ -19,13 +21,32 @@ export const imageUpload = TryCatch(
     //     : `${process.env.HOST_NAME}`;
     // let fileUrl = `${hostname}/${req.file?.path.replace(/\\/g, "/")}`;
 
+    let localFilePath = await req.file?.path.replace(/\\/g, "/");
+    console.log("localFilePath");
+    console.log(localFilePath);
+
+    if (!localFilePath) {
+      next(new ErrorHandler("please provide image", 404));
+    } else {
+      try {
+        localFilePath = await uploadsOnCloudinary(localFilePath);
+      } catch (error) {
+        next(new ErrorHandler("image upload fail on Cloudinary", 500));
+      }
+    }
+
     const image = await Image.create({
       _id: req.file?.filename,
       title,
       credits,
       updatedby: "ritik",
-      url: req.file?.path.replace(/\\/g, "/"),
+      url: localFilePath || "",
+      storage: process.env.STORAGE,
     });
+    console.log(localFilePath);
+    process.env.STORAGE !== "cloudinary"
+      ? (image.url = `${process.env.HOST_NAME}/${localFilePath}`)
+      : (image.url = image.url);
 
     return res.status(200).json({
       success: true,
