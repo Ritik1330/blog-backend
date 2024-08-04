@@ -38,6 +38,9 @@ app.use("/api/v1/tag", tagRoutes);
 app.use("/api/v1/staticPages", StaticPageRoutes);
 
 app.use("/uploads", express.static("uploads"));
+app.get('/', (req, res) => {
+  res.send('api working on => "/api/v1"')
+})
 app.use(errorMiddleware);
 
 cloudinary.config({
