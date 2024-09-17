@@ -18,3 +18,9 @@ const router = express.Router();
 router.post("/image", singleUpload.single("image"), imageUpload);
 
 export default router;
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
