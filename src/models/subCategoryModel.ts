@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 interface SubCategoryType extends Document {
   _id: string;
-  name: string;
+  title: string;
   slug: string;
   description?: string;
   category: string;
@@ -22,7 +22,7 @@ const SubCategorySchema = new Schema<SubCategoryType>(
       type: String,
       required: [true, "Please enter ID"],
     },
-    name: {
+    title: {
       type: String,
       required: [true, "Please enter Name"],
       unique: true,

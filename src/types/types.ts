@@ -78,7 +78,7 @@ export interface PostType {
   version?: number;
 }
 export type CategoryType = {
-  name: string;
+  title: string;
   slug: string;
   visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
   menuHierarchy?: number;
@@ -92,7 +92,7 @@ export type CategoryType = {
 };
 
 export type SubCategoryType = {
-  name: string;
+  title: string;
   slug: string;
   visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
   menuHierarchy?: number;

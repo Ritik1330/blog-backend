@@ -42,7 +42,33 @@ export const newStaticPage = TryCatch(
   }
 );
 
+export const getStaticPageDetails = TryCatch(async (req, res, next) => {
+  const id: string = req.params.id;
+
+  const staticPage = await StaticPage.findById(id);
+
+  if (!staticPage) return next(new ErrorHandler("Invalid SubCategory id", 400));
+
+  return res.status(200).json({
+    success: true,
+    staticPage,
+  });
+});
+
 export const getAllStaticPage = TryCatch(async (req, res, next) => {
+  const slug = req.query.slug || "";
+
+  if (slug) {
+    const staticPage = await StaticPage.findOne({ slug });
+    if (!staticPage)
+      return next(new ErrorHandler("Invalid subCategory slug", 400));
+
+    return res.status(200).json({
+      success: true,
+      page: staticPage,
+    });
+  }
+
   const staticPages = await StaticPage.find({});
   return res.status(200).json({
     success: true,

@@ -8,9 +8,8 @@ import { translate } from "@vitalets/google-translate-api";
 import { translate as bingtranslate } from "bing-translate-api";
 import { detectLanguage } from "../helpers/lang";
 import { IDBuilder, slugBuilder } from "../helpers";
-import {Image} from "../models/imageModel";
+import { Image } from "../models/imageModel";
 // import { singleUpload } from "../middlewares/multer";
-
 
 export const newPost = TryCatch(
   async (
@@ -107,8 +106,8 @@ export const newPost = TryCatch(
 export const getAllPost = TryCatch(async (req, res, next) => {
   const search = req.query.q || "";
   const primaryCategory = req.query.primaryCategory || "";
-  const categories = req.query.categories || "";
-  const subcategories = req.query.subcategories || "";
+  const categories = req.query.category || "";
+  const subcategories = req.query.subCategory || "";
   const slug = req.query.slug || "";
   const tags = req.query.tags || "";
   const authors = req.query.authors || "";
@@ -163,20 +162,18 @@ export const getAllPost = TryCatch(async (req, res, next) => {
     query.createdBy = createdBy;
   }
   if (startDate && endDate) {
-    console.log("date called");
     query.createdAt = { $gte: startDate, $lte: endDate };
   }
 
   const skip = (page - 1) * limit; // 1 * 4 = 4
-
-  const posts = await Post.find(query).populate("image")
+  const posts = await Post.find(query)
+    .populate("image")
     .sort({ createdAt: -1 })
     .limit(limit)
     .skip(skip);
 
   const count = await Post.countDocuments(query);
   const pageCount = Math.ceil(count / limit);
-  console.log(posts.length);
   return res.status(200).json({
     success: true,
     Pagination: {

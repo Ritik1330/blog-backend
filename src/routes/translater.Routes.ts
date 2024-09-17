@@ -3,6 +3,6 @@ import { translater } from "../controllers/translateController";
 
 const app = express.Router();
 
-app.put("/translater", translater);
+app.put("/", translater);
 
 export default app;

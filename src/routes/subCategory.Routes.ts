@@ -9,8 +9,8 @@ import {
 
 const app = express.Router();
 
-app.post("/new", newSubCategory);
-app.get("/all", getAllSubCategory);
+app.post("/", newSubCategory);
+app.get("/", getAllSubCategory);
 app.get("/:id", getCategoryDetails);
 app.delete("/:id", deleteSubCategory);
 

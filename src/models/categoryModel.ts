@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 interface CategoryType extends Document {
   _id: string;
-  name: string;
+  title: string;
   slug: string;
   visibility?: "hamburgerMenu" | "mainMenu" | "both" | null;
   menuHierarchy?: number;
@@ -21,7 +21,7 @@ const categorySchema = new Schema<CategoryType>(
       type: String,
       required: [true, "Please enter ID"],
     },
-    name: {
+    title: {
       type: String,
       required: [true, "Please enter Name"],
       unique: true,

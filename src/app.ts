@@ -27,20 +27,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/v1", userRoute);
+app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoutes);
-app.use("/api/v1/category", categoryRoutes);
-app.use("/api/v1/subCategory", subCategoryRoutes);
-app.use("/api/v1/uniqueid", uniqueIdRoutes);
-app.use("/api/v1/", imageRoutes);
-app.use("/api/v1", translaterRoutes);
-app.use("/api/v1/tag", tagRoutes);
+app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/subCategories", subCategoryRoutes);
+app.use("/api/v1/uniqueids", uniqueIdRoutes);
+app.use("/api/v1/tags", tagRoutes);
 app.use("/api/v1/staticPages", StaticPageRoutes);
+app.use("/api/v1/files/", imageRoutes);
+app.use("/api/v1/translater", translaterRoutes);
 
 app.use("/uploads", express.static("uploads"));
-app.get('/', (req, res) => {
-  res.send('api working on => "/api/v1"')
-})
+app.get("/", (req, res) => {
+  res.send('api working on => "/api/v1"');
+});
 app.use(errorMiddleware);
 
 cloudinary.config({

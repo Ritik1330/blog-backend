@@ -8,8 +8,8 @@ import {
 
 const app = express.Router();
 
-app.post("/new", newTag);
-app.get("/all", getAllTags);
+app.post("/", newTag);
+app.get("/", getAllTags);
 app.get("/:id", getTagDetails);
 app.delete("/:id", deleteTag);
 
