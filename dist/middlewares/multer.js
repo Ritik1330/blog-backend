@@ -5,15 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.singleUpload = void 0;
 const multer_1 = __importDefault(require("multer"));
-const uuid_1 = require("uuid");
-const storage = multer_1.default.diskStorage({
-    destination(req, file, callback) {
-        callback(null, "uploads");
-    },
-    filename(req, file, callback) {
-        const id = (0, uuid_1.v4)(); // Generating a unique identifier for the file
-        const extName = file.originalname.replace(/\s+/g, "-");
-        callback(null, `${id}-${extName}`);
-    },
-});
+const storage = multer_1.default.memoryStorage();
+// const storage = multer.memoryStorage();
 exports.singleUpload = (0, multer_1.default)({ storage });

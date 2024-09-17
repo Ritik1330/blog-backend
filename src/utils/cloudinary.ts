@@ -1,27 +1,38 @@
+import { Request } from "express";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
 
-const uploadsOnCloudinary = async (localfilepath: string) => {
+export const uploadsOnCloudinary = async (req: Request) => {
+  const { file } = req;
 
-//   console.log(uploadsOnCloudinary);
-console.log(process.env.CLOUDINARY_CLOUD_NAME)
-  try {
-    if (!localfilepath) return undefined;
-    //upload the file on cloudinary
-    const result = await cloudinary.uploader.upload(localfilepath, {
-      folder: "blogapp",
-      resource_type: "auto",
+  console.log("2222");
+  // Assuming you're using streams or attaching listeners
+  return new Promise((resolve, reject) => {
+    if (!file) return reject(new Error("No file provided"));
+    console.log("2222");
+    // Cloudinary upload logic here, e.g., streams
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "blogapp",
+        resource_type: "auto",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result?.secure_url);
+      }
+    );
+
+    // Attach the file stream to the Cloudinary uploader
+    stream.end(file.buffer);
+
+    // CLEANUP: ensure the 'close' listener is cleaned up
+    stream.on("close", () => {
+      stream.removeAllListeners("close");
     });
-    //file has been upload successfull
-    console.log(result);
-    return result.secure_url;
-  } catch (error) {
-    //remove the localiy saved temprorary file as the upload opreatin faild
-    fs.unlinkSync(localfilepath);
-    console.error(error);
-  }
+
+    // CLEANUP: ensure error listener is also cleaned up
+    stream.on("error", (err) => {
+      stream.removeAllListeners("error");
+      reject(err);
+    });
+  });
 };
-
-
-
-export { uploadsOnCloudinary };

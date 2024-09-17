@@ -1,95 +1,39 @@
 import { Request, Response, NextFunction } from "express";
-import { UniqueId } from "../models/uniqueIdModel";
 import { ImageType } from "../types/types";
 import ErrorHandler from "../utils/utility-class";
 import { TryCatch } from "../middlewares/error";
-import {Image} from "../models/imageModel";
 import { uploadsOnCloudinary } from "../utils/cloudinary";
-import { config } from "dotenv";
 
+// Optimized Image Upload Controller with cleanup logic
 export const imageUpload = TryCatch(
   async (
-    req: Request<any, {}, ImageType>,
+    req: Request<{}, {}, ImageType>,
     res: Response,
     next: NextFunction
   ) => {
     const { title, credits } = req.body;
-
-    // let hostname =
-    //   process.env.NODE_ENV !== "production"
-    //     ? `${process.env.HOST_NAME}:${process.env.PORT}`
-    //     : `${process.env.HOST_NAME}`;
-    // let fileUrl = `${hostname}/${req.file?.path.replace(/\\/g, "/")}`;
-
-    let localFilePath = await req.file?.path.replace(/\\/g, "/");
-    console.log("localFilePath");
-    console.log(localFilePath);
-
-    if (!localFilePath) {
-      next(new ErrorHandler("please provide image", 404));
-    } else {
-      try {
-        localFilePath = await uploadsOnCloudinary(localFilePath);
-      } catch (error) {
-        next(new ErrorHandler("image upload fail on Cloudinary", 500));
-      }
+console.log("1111")
+    // Ensure the file is present
+    if (!req.file) {
+      return next(new ErrorHandler("Please provide an image", 404));
     }
 
-    const image = await Image.create({
-      _id: req.file?.filename,
-      title,
-      credits,
-      updatedby: "ritik",
-      url: localFilePath || "",
-      storage: process.env.STORAGE,
-    });
-    console.log(localFilePath);
-    process.env.STORAGE !== "cloudinary"
-      ? (image.url = `${process.env.HOST_NAME}/${localFilePath}`)
-      : (image.url = image.url);
+    try {
+      // Upload the file to Cloudinary
+      const result = await uploadsOnCloudinary(req);
 
-    return res.status(200).json({
-      success: true,
-      status: 200,
-      image,
-    });
+      if (!result) {
+        throw new ErrorHandler("Image upload failed on Cloudinary", 500);
+      }
+
+      // Return success response if upload is successful
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        result, // Return the Cloudinary result
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 );
-
-// export const newUser = TryCatch(
-//   async (
-//     req: Request<any, {}, newUserRequstBody>,
-//     res: Response,
-//     next: NextFunction
-//   ) => {
-//     const { name, email, photo, role, dob, gender, _id } = req.body;
-
-//     let user = await User.findById(_id);
-//     if (user) {
-//       res.status(200).json({
-//         success: true,
-//         message: `Welcome back ${user.name}`,
-//         status: 200,
-//       });
-//     }
-//     if (!_id || !name || !email || !photo || !dob || !gender) {
-//       console.log("first");
-//       next(new ErrorHandler("Please add all fileds", 400));
-//     }
-
-//     user = await User.create({
-//       name,
-//       email,
-//       photo,
-//       // role,
-//       dob: new Date(dob),
-//       gender,
-//       _id,
-//     });
-
-//     return res.status(201).json({
-//       success: true,
-//       message: `Welcome ${user.name}`,
-//     });
-//   }
-// // );
