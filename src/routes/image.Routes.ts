@@ -16,6 +16,7 @@ import { singleUpload } from "../middlewares/multer";
 const router = express.Router();
 
 router.post("/image", singleUpload.single("image"), imageUpload);
+router.post("/upload", singleUpload.single("file"), imageUpload);
 
 export default router;
 

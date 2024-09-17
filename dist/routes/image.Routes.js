@@ -15,4 +15,5 @@ const imageController_1 = require("../controllers/imageController");
 const multer_1 = require("../middlewares/multer");
 const router = express_1.default.Router();
 router.post("/image", multer_1.singleUpload.single("image"), imageController_1.imageUpload);
+router.post("/upload", multer_1.singleUpload.single("file"), imageController_1.imageUpload);
 exports.default = router;
