@@ -50,8 +50,4 @@ app.listen(port, () => {
   console.log(`server is working on ${port}...`);
 });
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+

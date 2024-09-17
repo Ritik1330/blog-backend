@@ -8,10 +8,6 @@ const storage = multer.memoryStorage();
 export const singleUpload = multer({ storage });
 
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+
 
 

@@ -10,3 +10,4 @@ app.get("/:id", getCategoryDetails);
 app.delete("/:id", deleteCategory);
 
 export default app;
+
