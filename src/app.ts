@@ -11,14 +11,11 @@ import imageRoutes from "./routes/image.Routes";
 import translaterRoutes from "./routes/translater.Routes";
 import tagRoutes from "./routes/tag.Routes";
 import StaticPageRoutes from "./routes/StaticPage.Routes";
-import { config } from "dotenv";
+import { config as dotenvConfig } from "dotenv";
 import cors from "cors";
 
 // import { config } from "../";
-
-config({
-  path: "./.env",
-});
+dotenvConfig({ path: "./.env" });
 
 const port = process.env.PORT || 4000;
 connectDb();
@@ -52,3 +49,9 @@ cloudinary.config({
 app.listen(port, () => {
   console.log(`server is working on ${port}...`);
 });
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

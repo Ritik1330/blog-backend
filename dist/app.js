@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = void 0;
 const express_1 = __importDefault(require("express"));
 const cloudinary_1 = require("cloudinary");
 const features_1 = require("./utils/features");
@@ -19,9 +20,7 @@ const StaticPage_Routes_1 = __importDefault(require("./routes/StaticPage.Routes"
 const dotenv_1 = require("dotenv");
 const cors_1 = __importDefault(require("cors"));
 // import { config } from "../";
-(0, dotenv_1.config)({
-    path: "./.env",
-});
+(0, dotenv_1.config)({ path: "./.env" });
 const port = process.env.PORT || 4000;
 (0, features_1.connectDb)();
 const app = (0, express_1.default)();
@@ -49,3 +48,8 @@ cloudinary_1.v2.config({
 app.listen(port, () => {
     console.log(`server is working on ${port}...`);
 });
+exports.config = {
+    api: {
+        bodyParser: false,
+    },
+};
