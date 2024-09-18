@@ -45,5 +45,5 @@ cloudinary_1.v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 app.listen(port, () => {
-    console.log(`server is working on ${port}...`);
+    console.log(`server is working on 👌 ${port}...`);
 });

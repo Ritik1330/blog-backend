@@ -21,7 +21,6 @@ export const newUser = TryCatch(
       });
     }
     if (!_id || !name || !email || !photo || !dob || !gender) {
-      console.log("first");
       next(new ErrorHandler("Please add all fileds", 400));
     }
 
@@ -52,7 +51,6 @@ export const getAllUsers = TryCatch(async (req, res, next) => {
 });
 
 export const getUser = TryCatch(async (req, res, next) => {
-  console.log(req.params);
   const id: string = req.params.id;
 
   const user = await User.findById(id);
@@ -67,7 +65,6 @@ export const getUser = TryCatch(async (req, res, next) => {
 export const deleteUser = TryCatch(async (req, res, next) => {
   const id: string = req.params.id;
   const user = await User.findById(id);
-  console.log(user);
   if (!user) return next(new ErrorHandler("Invalid User id", 400));
   await user.deleteOne();
   return res.status(200).json({

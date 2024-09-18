@@ -17,7 +17,6 @@ export const newPost = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    console.log(req.body);
     const {
       title,
       summary,
@@ -38,7 +37,6 @@ export const newPost = TryCatch(
     } = req.body;
 
     if (!title || !content || !primaryCategory || !postType) {
-      console.log("first");
       next(new ErrorHandler("Please add all fileds", 400));
     }
 
@@ -47,7 +45,6 @@ export const newPost = TryCatch(
       generatedSlug = slugBuilder(slug);
     } else {
       const language = await detectLanguage(title);
-      console.log(language);
       if (language) {
         try {
           var result = await bingtranslate(slug?.toString(), null, language);

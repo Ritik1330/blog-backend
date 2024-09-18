@@ -13,7 +13,7 @@ export const uploadsOnCloudinary = async (req: any) => {
         if (error) {
           return reject(error);
         }
-        resolve(result); // Return Cloudinary's result object
+        resolve(result?.secure_url); // Return Cloudinary's result object
       }
     );
     streamifier.createReadStream(req.file.buffer).pipe(stream);

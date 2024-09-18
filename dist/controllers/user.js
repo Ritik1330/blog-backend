@@ -18,7 +18,6 @@ exports.newUser = (0, error_1.TryCatch)(async (req, res, next) => {
         });
     }
     if (!_id || !name || !email || !photo || !dob || !gender) {
-        console.log("first");
         next(new utility_class_1.default("Please add all fileds", 400));
     }
     user = await User_1.User.create({
@@ -43,7 +42,6 @@ exports.getAllUsers = (0, error_1.TryCatch)(async (req, res, next) => {
     });
 });
 exports.getUser = (0, error_1.TryCatch)(async (req, res, next) => {
-    console.log(req.params);
     const id = req.params.id;
     const user = await User_1.User.findById(id);
     if (!user)
@@ -56,7 +54,6 @@ exports.getUser = (0, error_1.TryCatch)(async (req, res, next) => {
 exports.deleteUser = (0, error_1.TryCatch)(async (req, res, next) => {
     const id = req.params.id;
     const user = await User_1.User.findById(id);
-    console.log(user);
     if (!user)
         return next(new utility_class_1.default("Invalid User id", 400));
     await user.deleteOne();

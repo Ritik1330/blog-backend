@@ -12,10 +12,8 @@ const lang_1 = require("../helpers/lang");
 const helpers_1 = require("../helpers");
 // import { singleUpload } from "../middlewares/multer";
 exports.newPost = (0, error_1.TryCatch)(async (req, res, next) => {
-    console.log(req.body);
     const { title, summary, description, image, content, postType, primaryCategory, categories, slug, tags, authors, status, metaData, socialData, schemaData, version, } = req.body;
     if (!title || !content || !primaryCategory || !postType) {
-        console.log("first");
         next(new utility_class_1.default("Please add all fileds", 400));
     }
     var generatedSlug = undefined;
@@ -24,7 +22,6 @@ exports.newPost = (0, error_1.TryCatch)(async (req, res, next) => {
     }
     else {
         const language = await (0, lang_1.detectLanguage)(title);
-        console.log(language);
         if (language) {
             try {
                 var result = await (0, bing_translate_api_1.translate)(slug?.toString(), null, language);

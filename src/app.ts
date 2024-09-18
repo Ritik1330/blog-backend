@@ -47,7 +47,7 @@ cloudinary.config({
 });
 
 app.listen(port, () => {
-  console.log(`server is working on ${port}...`);
+  console.log(`server is working on 👌 ${port}...`);
 });
 
 
